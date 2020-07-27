@@ -1,5 +1,6 @@
 from application import app
 from flask import render_template, request, abort, jsonify
+from flask_cors import CORS
 
 courseData = [{"courseID":"1111","title":"FSND","description":"Full Stack Nano Degree","credits":"3","term":"Fall, Spring"}, 
               {"courseID":"2222","title":"Java 1","description":"Intro to Java Programming","credits":"4","term":"Spring"}, 
@@ -8,6 +9,13 @@ courseData = [{"courseID":"1111","title":"FSND","description":"Full Stack Nano D
               {"courseID":"5555","title":"Java 2","description":"Advanced Java Programming","credits":"4","term":"Fall"}]
 
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers',
+                            'Content-Type,Authorization,true')
+    response.headers.add('Access-Control-Allow-Methods',
+                            'GET,PATCH,POST,DELETE,OPTIONS')
+    return response
 
 @app.route("/")
 @app.route("/index")
