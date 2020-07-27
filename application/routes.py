@@ -1,6 +1,7 @@
-from application import app
+from application import app, cors
 from flask import render_template, request, abort, jsonify
-from flask_cors import CORS
+from models import Course, Instructor
+
 
 courseData = [{"courseID":"1111","title":"FSND","description":"Full Stack Nano Degree","credits":"3","term":"Fall, Spring"}, 
               {"courseID":"2222","title":"Java 1","description":"Intro to Java Programming","credits":"4","term":"Spring"}, 
