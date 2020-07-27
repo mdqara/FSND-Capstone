@@ -9,6 +9,7 @@ db = SQLAlchemy()
 # ----------------------------------------------------------------------------#
 def setup(app):
     app.config.from_object("config")
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
     migrate = Migrate(app, db)
@@ -53,4 +54,4 @@ class Enrollment(db.Model):
     id                  = db.Column(db.Integer, primary_key=True)
     student_id          = db.Column(db.Integer, db.ForeignKey("Student.id"))
     course_id           = db.Column(db.Integer, db.ForeignKey("Course.id"))
-    Instructor_id       = db.Column(db.Integer, db.ForeignKey("Instructor.id"))
+    instructor_id       = db.Column(db.Integer, db.ForeignKey("Instructor.id"))

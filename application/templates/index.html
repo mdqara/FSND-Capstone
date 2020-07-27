@@ -1,14 +1,25 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h1>Welcome to Universal Tech Academy.</h1>
-            {% if login %}
-            <h3>Let's get started.</h3>
-            {% else %}
-            <p>Already registered? <a href="{{ url_for('login') }}">Login</a></p>
-            {% endif %}
-            </div>
+
+<div class="row mx-lg-n5">
+
+    <div class="jumbotron col-md-8 ">
+        <h1>Welcome to People's Academy 📚<h1>
+                <p class="lead">Explore courses that other people make. this platform is from people to people.</p>
+
+                {% if login %}
+                <p class="lead font-weight-bold">Discover the courses now.</p>
+                <a class="btn btn-lg btn-success" href="{{url_for('courses')}}" role="button">View courses &raquo;</a>
+
+                {% else %}
+                <a class="btn btn-lg btn-success" href="{{url_for('login')}}" role="button">Get Started &raquo;</a>
+                {% endif %}
     </div>
+
+    <div class="col-md-4">
+        <img src="../static/images/teching.svg" class="img-fluid">
+    </div>
+</div>
+
 {% endblock %}

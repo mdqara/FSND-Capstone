@@ -21,7 +21,7 @@ def after_request(response):
 @app.route("/")
 @app.route("/index")
 def index():
-    return render_template('index.html', index=True)
+    return render_template('index.html', login=False)
 
 
 @app.route("/courses/")
@@ -38,6 +38,10 @@ def register():
 @app.route("/login")
 def login():
     return render_template('login.html', login=True)
+
+@app.route("/user")
+def user():
+    return render_template('user.html')
 
 
 
