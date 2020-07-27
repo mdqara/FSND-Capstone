@@ -2,24 +2,25 @@
 
 {% block content %}
 
-<div class="row mx-lg-n5">
+<div class="container">
+    <div class="row mx-lg-n5">
+        <div class="jumbotron col-md-8 ">
+            <h1>People's Academy 📚<h1>
+                    <p class="lead">Explore courses that other people make. this platform is from people to people. </p>
+                    <p class="lead font-weight-bold">It is completely FREE.</p>
+                    {% if login %}
+                    <p class="lead font-weight-bold">Discover the courses now.</p>
+                    <a class="btn btn-lg btn-success" href="{{url_for('courses')}}" role="button">View courses
+                        &raquo;</a>
 
-    <div class="jumbotron col-md-8 ">
-        <h1>Welcome to People's Academy 📚<h1>
-                <p class="lead">Explore courses that other people make. this platform is from people to people.</p>
+                    {% else %}
+                    <a class="btn btn-lg btn-success" href="{{url_for('login')}}" role="button">Get Started &raquo;</a>
+                    {% endif %}
+        </div>
 
-                {% if login %}
-                <p class="lead font-weight-bold">Discover the courses now.</p>
-                <a class="btn btn-lg btn-success" href="{{url_for('courses')}}" role="button">View courses &raquo;</a>
-
-                {% else %}
-                <a class="btn btn-lg btn-success" href="{{url_for('login')}}" role="button">Get Started &raquo;</a>
-                {% endif %}
-    </div>
-
-    <div class="col-md-4">
-        <img src="../static/images/teching.svg" class="img-fluid">
+        <div class="col-md-4">
+            <img src="../static/images/teching.svg" class="img-fluid">
+        </div>
     </div>
 </div>
-
 {% endblock %}

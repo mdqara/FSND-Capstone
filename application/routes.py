@@ -43,6 +43,9 @@ def login():
 def user():
     return render_template('user.html')
 
+@app.route("/add-course")
+def add_course():
+    return render_template('add-course.html')
 
 
 @app.route("/enrollment", methods=["GET","POST"])

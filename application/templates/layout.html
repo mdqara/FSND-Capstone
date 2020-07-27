@@ -11,6 +11,9 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/">
 
+    <link rel="icon" href="../static/images/icon.png">
+
+
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" rel="stylesheet">
 
@@ -35,30 +38,35 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="{{url_for('index')}}">People's Academy 📚</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">View Courses <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Register</a>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{url_for('register')}}" class="btn btn-outline-success my-2 my-sm-0"> Get Started </a>
-                </li>
-            </ul>
-        </div>
+        <div class="container">
+            <a class="navbar-brand" href="{{url_for('index')}}">People's Academy 📚</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">View Courses <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('add_course')}}">Add course</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{url_for('register')}}" class="btn btn-outline-success my-2 my-sm-0"> Get Started </a>
+                    </li>
+                </ul>
+            </div>
     </nav>
+    </div>
+
+
 
     <main role="main" class="container">
 

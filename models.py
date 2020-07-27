@@ -23,7 +23,7 @@ class Student(db.Model):
     __tablename__ = "Student"
 
     id                  = db.Column(db.Integer, primary_key=True)
-    fname               = db.Column(db.String)
+    fname               = db.Column(db.String(120))
     lanme               = db.Column(db.String(120))
     phone               = db.Column(db.String(120))
     email               = db.Column(db.String(120))
@@ -33,8 +33,10 @@ class Course(db.Model):
     __tablename__ = "Course"
 
     id                  = db.Column(db.Integer, primary_key=True)
-    name                = db.Column(db.String)
+    name                = db.Column(db.String(120))
     description         = db.Column(db.String(120))
+    duration            = db.Column(db.String(120))
+    image_link          = db.Column(db.String(500))
     enrollment          = db.relationship("enrollment", backref="Course", cascade="all,delete", lazy=True)
 
 

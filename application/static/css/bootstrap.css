@@ -11469,8 +11469,16 @@ a.text-dark:focus {
 
 /*# sourceMappingURL=bootstrap.css.map */
 
+/* --------- added by me ----------- */
+
 /* Show it is fixed to the top */
 body {
   min-height: 75rem;
   padding-top: 4.5rem;
+}
+
+@media(max-width: 768px) {
+  button.full-width {
+    width: 100%;
+  }
 }
