@@ -48,6 +48,40 @@ def add_course():
     return render_template('add-course.html')
 
 
+@app.route("/create-course", methods=['POST'])
+def create_course():
+    try:
+        name            = request.form.get("name")
+        description     = request.form.get("description")
+        duration           = request.form.get("duration")
+        image_link = request.form.get("image_link")
+    
+        course_to_add = Course(
+            name=name,
+            description=description,
+            duration=duration,
+            image_link=image_link,
+        )
+
+        print(course_to_add)
+        
+        db.session.add(course_to_add)
+        db.session.commit()
+
+        # on successful db insert, flash success
+        flash("Venue " + request.form["name"] + " was successfully listed!")
+
+    # TODO: on unsuccessful db insert, flash an error instead.
+    # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
+    except:
+        flash("An error occurred. Venue " + name + " could not be listed.")
+        db.session.rollback()
+    finally:
+        db.session.close()
+    # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+    return render_template("pages/home.html")
+
+
 @app.route("/enrollment", methods=["GET","POST"])
 def enrollment():
 
