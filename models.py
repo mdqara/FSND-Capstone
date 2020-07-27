@@ -20,40 +20,40 @@ def setup(app):
 # ----------------------------------------------------------------------------#
 
 class Student(db.Model):
-    __tablename__ = "Student"
+    __tablename__ = "student"
 
     id                  = db.Column(db.Integer, primary_key=True)
     fname               = db.Column(db.String(120))
     lanme               = db.Column(db.String(120))
     phone               = db.Column(db.String(120))
     email               = db.Column(db.String(120))
-    enrollment          = db.relationship("enrollment", backref="Student", cascade="all,delete", lazy=True)
+    enrollment          = db.relationship("enrollment", backref="student", cascade="all,delete", lazy=True)
 
 class Course(db.Model):
-    __tablename__ = "Course"
+    __tablename__ = "course"
 
     id                  = db.Column(db.Integer, primary_key=True)
     name                = db.Column(db.String(120))
     description         = db.Column(db.String(120))
     duration            = db.Column(db.String(120))
     image_link          = db.Column(db.String(500))
-    enrollment          = db.relationship("enrollment", backref="Course", cascade="all,delete", lazy=True)
+    enrollment          = db.relationship("enrollment", backref="course", cascade="all,delete", lazy=True)
 
 
 class Instructor(db.Model):
-    __tablename__ = "Instructor"
+    __tablename__ = "instructor"
 
     id                  = db.Column(db.Integer, primary_key=True)
     fname               = db.Column(db.String)
     lanme               = db.Column(db.String(120))
     phone               = db.Column(db.String(120))
     email               = db.Column(db.String(120))
-    enrollment               = db.relationship("enrollment", backref="Instructor", cascade="all,delete", lazy=True)
+    enrollment               = db.relationship("enrollment", backref="instructor", cascade="all,delete", lazy=True)
 
 class Enrollment(db.Model):
-    __tablename__ = "Enrollment"
+    __tablename__ = "enrollment"
     
     id                  = db.Column(db.Integer, primary_key=True)
-    student_id          = db.Column(db.Integer, db.ForeignKey("Student.id"))
-    course_id           = db.Column(db.Integer, db.ForeignKey("Course.id"))
-    instructor_id       = db.Column(db.Integer, db.ForeignKey("Instructor.id"))
+    student_id          = db.Column(db.Integer, db.ForeignKey("student.id"))
+    course_id           = db.Column(db.Integer, db.ForeignKey("course.id"))
+    instructor_id       = db.Column(db.Integer, db.ForeignKey("instructor.id"))

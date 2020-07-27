@@ -1,6 +1,7 @@
 from application import app, cors
-from flask import render_template, request, abort, jsonify
+from flask import render_template, request, abort, jsonify, url_for
 from models import Course, Instructor
+from models import db
 
 
 courseData = [{"courseID":"1111","title":"FSND","description":"Full Stack Nano Degree","credits":"3","term":"Fall, Spring"}, 
@@ -51,10 +52,14 @@ def add_course():
 @app.route("/create-course", methods=['POST'])
 def create_course():
     try:
+
+        data = request.get_json
+        print(data)
+        
         name            = request.form.get("name")
         description     = request.form.get("description")
-        duration           = request.form.get("duration")
-        image_link = request.form.get("image_link")
+        duration        = request.form.get("duration")
+        image_link      = request.form.get("image_link")
     
         course_to_add = Course(
             name=name,
@@ -64,22 +69,16 @@ def create_course():
         )
 
         print(course_to_add)
-        
+
         db.session.add(course_to_add)
         db.session.commit()
 
-        # on successful db insert, flash success
-        flash("Venue " + request.form["name"] + " was successfully listed!")
-
-    # TODO: on unsuccessful db insert, flash an error instead.
-    # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
     except:
-        flash("An error occurred. Venue " + name + " could not be listed.")
         db.session.rollback()
     finally:
         db.session.close()
-    # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
-    return render_template("pages/home.html")
+
+    return render_template("index.html")
 
 
 @app.route("/enrollment", methods=["GET","POST"])
