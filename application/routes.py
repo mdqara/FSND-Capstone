@@ -74,7 +74,7 @@ def create_course():
     db.session.add(course_to_add)
     db.session.commit()
 
-    return render_template("index.html")
+    return render_template("enrollment.html", course_name=course_name)
 
 
 # except Exception as e:
@@ -88,13 +88,17 @@ def create_course():
 @app.route("/enrollment", methods=["GET", "POST"])
 def enrollment():
 
-    # body = request.get_json()
-    # data = body
+    return render_template("enrollment.html")
+
+    '''
+    body = request.get_json()
+    data = body
     id = request.form.get('courseID')
     title = request.form.get('title')
     term = request.form.get('term')
-    return render_template("enrollment.html", enrollment=False, data={"id": id, "title": title, "term": term})
 
+    return render_template("enrollment.html", enrollment=False, data={"id": id, "title": title, "term": term})
+    '''
 
 @app.route('/api/')
 @app.route('/api/<index>')

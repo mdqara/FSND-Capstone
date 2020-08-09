@@ -7,6 +7,17 @@
     <div class="row">
         <div class="col-md-12 text-center">
 
+            
+            {% if course_name %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong> {{ course_name }} </strong>Has been added succesfully to your account!
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endif %}
+
+
             {% if not classes %}
                 <h1>You are not enrolled in any class.</h1>
             {% else %}

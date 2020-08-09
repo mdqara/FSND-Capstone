@@ -9,8 +9,6 @@
     <meta name="generator" content="Jekyll v4.0.1">
     <title>People's Academy 📚</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/navbar-fixed/">
-
     <link rel="icon" href="../static/images/icon.png">
 
 
@@ -55,6 +53,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{url_for('add_course')}}">Add course</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{url_for('enrollment')}}">Enrollments</a>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{url_for('register')}}" class="btn btn-outline-success my-2 my-sm-0"> Get Started </a>
@@ -88,6 +89,8 @@
 
     </main>
 
+    <script src="../static/js/util.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
