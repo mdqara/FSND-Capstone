@@ -30,7 +30,7 @@ class Student(db.Model):
     phone = db.Column(db.String(120))
     email = db.Column(db.String(120))
     enrollment = db.relationship(
-        "Enrollment ", backref="studentt", cascade="all,delete", lazy=True)
+        "Enrollment", backref="student", cascade="all,delete", lazy=True)
 
 
 class Course(db.Model):
@@ -56,8 +56,9 @@ class Instructor(db.Model):
 
 
 class Enrollment(db.Model):
+    __tablename__ = "Enrollment"
 
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey("student.id"))
-    course_id = db.Column(db.Integer, db.ForeignKey("course.id"))
-    instructor_id = db.Column(db.Integer, db.ForeignKey("instructor.id"))
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
+    instructor_id = db.Column(db.Integer, db.ForeignKey("instructor.id"), nullable=False)
