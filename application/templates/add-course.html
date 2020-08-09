@@ -1,48 +1,46 @@
-{% extends 'layout.html' %}
+{% extends 'layout.html' %} {% block content %}
 
-{% block content %}
-
-<div class="jumbotron container ">
-    <h2>Add new course ✏</h2>
-    <p>Fill out the form to create a new course, that will be added in the courses page.</p>
+<div class="jumbotron container">
+  <h2>Add new course ✏</h2>
+  <p>
+    Fill out the form to create a new course, that will be added in the courses
+    page.
+  </p>
 </div>
 
 <div class="container">
-
-
-    <form action="/create-course" method="POST">
-
-        <div class="form-group row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="course-name">Course name:</label>
-                    <input class="form-control" id="course-name" type="text">
-                </div>
-
-                <div class="form-group">
-                    <label for="course-name">Course description:</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="course-name">Course duration:</label>
-                    <input class="form-control" id="course-name" type="number">
-                </div>
-
-                <div class="form-group">
-                    <label for="course-name">Course image link URL:</label>
-                    <input class="form-control" id="course-name" type="text">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Add Course</button>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <img src="../static/images/teching.svg" class="img-fluid" width="80%">
-            </div>
+  <form action="/create-course" method="POST">
+    <div class="form-group row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="course-name">Course name:</label>
+          <input class="form-control" id="course-name" name="course-name" type="text" />
         </div>
-    </form>
+
+        <div class="form-group">
+          <label for="course-description">Course description:</label>
+          <textarea class="form-control" id="course-description" name="course-description" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="course-duration">Course duration:</label>
+          <input class="form-control" id="course-duration" name="course-duration" type="number" />
+        </div>
+
+        <div class="form-group">
+          <label for="course-img-URL">Course image link URL:</label>
+          <input class="form-control" id="course-img-URL" name="course-img-URL" type="text" />
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Add Course</button>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <img src="../static/images/teching.svg" class="img-fluid" width="80%" />
+      </div>
+    </div>
+  </form>
 </div>
 
 {% endblock %}
