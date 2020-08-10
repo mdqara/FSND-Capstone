@@ -1,1 +1,1 @@
-web: gunicorn 'app:create_app(test_config=None)' --preload
+web: gunicorn wsgi:app 
