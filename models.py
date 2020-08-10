@@ -36,8 +36,8 @@ class Student(db.Model):
 class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120))
-    description = db.Column(db.String(120))
+    name = db.Column(db.String(200))
+    description = db.Column(db.String(500))
     duration = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     enrollment = db.relationship(
@@ -59,6 +59,9 @@ class Enrollment(db.Model):
     __tablename__ = "Enrollment"
 
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
-    instructor_id = db.Column(db.Integer, db.ForeignKey("instructor.id"), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey(
+        "student.id"), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey(
+        "course.id"), nullable=False)
+    instructor_id = db.Column(db.Integer, db.ForeignKey(
+        "instructor.id"), nullable=False)

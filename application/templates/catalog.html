@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <img src="{{ course.image_link }}" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">{{ course.name }}</h5>
+                    <p class="card-text">{{ course.desc }}</p>
+                    <a href="course/{{ course.id }}" class="btn btn-primary">See Course</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
