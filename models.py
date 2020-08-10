@@ -37,7 +37,7 @@ class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
-    description = db.Column(db.String(500))
+    description = db.Column(db.String(1000))
     duration = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
     enrollment = db.relationship(
