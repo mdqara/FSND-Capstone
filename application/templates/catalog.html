@@ -5,6 +5,15 @@
 
 <div class="container">
     <div class="row">
+        {% if course_name %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong> {{ course_name }} </strong>Has been edited succesfully!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
         {% for course in courses %}
         <div class="col-md-4">
             <div class="card" style="width: 18rem;">

@@ -1,5 +1,5 @@
 from application import app, cors
-from flask import render_template, request, abort, jsonify, url_for
+from flask import render_template, request, abort, jsonify, url_for, redirect
 from models import Course, Instructor
 from models import db
 
@@ -67,6 +67,41 @@ def create_course():
     return render_template("enrollment.html", course_name=course_name)
 
 
+@app.route('/course/<int:index>')
+def course(index):
+    result = db.session.query(Course).filter(Course.id == index)
+    result = result[0]
+
+    json_data = {
+        'id': result.id,
+        'name': result.name,
+        'desc': result.description,
+        'duration': result.duration,
+        'image_link': result.image_link
+    }
+
+    return render_template('course.html', course=json_data)
+
+
+@app.route("/update-course/<int:index>", methods=['POST'])
+def update_course(index):
+
+    # try:
+
+    result = db.session.query(Course).filter(Course.id == index)
+    result = result[0]
+    course = result
+
+    course.name = request.form.get('course-name')
+    course.description = request.form.get('course-description')
+    course.duration = request.form.get('course-duration')
+    course.image_link = request.form.get('course-img-URL')
+
+    db.session.commit()
+
+    return redirect(url_for('course', index=index))
+
+
 # except Exception as e:
 #    db.session.rollback()
 #    print(e)
@@ -112,16 +147,6 @@ def view_catalog():
 @app.route('/view_courses')
 def view_courses():
     return render_template("courses.html")
-
-
-@app.route('/course/<index>')
-def course(index):
-    result = db.session.query(Course).get(index)
-
-    return jsonify({
-        'success': True,
-        'course': result
-    })
 
 
 @app.route('/api/')
