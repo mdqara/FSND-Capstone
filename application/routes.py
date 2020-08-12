@@ -106,18 +106,25 @@ def view_courses(index):
     return render_template('course.html', course=json_data)
 
 
-@app.route("/course/<int:index>", methods=['POST'])
+@app.route("/course/<int:index>", methods=["PATCH"])
 def update_course(index):
 
     try:
+        body = request.get_json()
+
+        name = body.get('name', None)
+        description = body.get('description', None)
+        duration = body.get('duration', None)
+        image_link = body.get('image_link', None)
+
         result = db.session.query(Course).filter(Course.id == index)
         result = result[0]
         course = result
 
-        course.name = request.form.get('course-name')
-        course.description = request.form.get('course-description')
-        course.duration = request.form.get('course-duration')
-        course.image_link = request.form.get('course-img-URL')
+        course.name = name
+        course.description = description
+        course.duration = duration
+        course.image_link = image_link
 
         db.session.commit()
 
@@ -181,7 +188,7 @@ def view_catalog():
             "image_link": course.image_link
         })
 
-    #data = data + dummy_course
+    # data = data + dummy_course
 
     return render_template("catalog.html", courses=data)
 
