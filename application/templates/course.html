@@ -92,7 +92,7 @@
             </div>
             <div class="modal-footer">
                 <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                <input type="submit" class="btn btn-danger" id="deleteBtn" data-id="{{course.id}}" value="Delete">
+                <input type="button" class="btn btn-danger" id="deleteBtn" data-id="{{course.id}}" value="Delete">
             </div>
         </div>
     </div>
@@ -105,7 +105,8 @@
         fetch('/course/' + id, {
             method: 'DELETE'
         })
-        window.location = '/catalog'
+        window.location = '/catalog';
+
     }
 </script>
 

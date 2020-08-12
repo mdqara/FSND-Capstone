@@ -147,7 +147,7 @@ def delete_course(index):
     finally:
         db.session.close()
 
-    return render_template('catalog.html')
+    return redirect(url_for('view_catalog'))
 
 
 @app.route("/enrollment", methods=["GET", "POST"])
