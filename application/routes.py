@@ -4,29 +4,34 @@ from models import Course, Instructor
 from models import db
 
 dummy_course = [{
-    "desc": "Hone specialized skills in Data Product Management and learn how to model data, identify trends in data, and leverage those insights to develop data-backed product strategy.", 
-    "duration": "1", 
-    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4FCXQsUpzftEgEdFGqQmXE/8ba5c2e69a5b036d4dafe1ae5803fe60/syllabus__8_.jpg", 
+    "id": "1",
+    "desc": "Hone specialized skills in Data Product Management and learn how to model data, identify trends in data, and leverage those insights to develop data-backed product strategy.",
+    "duration": "1",
+    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4FCXQsUpzftEgEdFGqQmXE/8ba5c2e69a5b036d4dafe1ae5803fe60/syllabus__8_.jpg",
     "name": "Applying Data Science to Product Management"
-  }, 
-  {
-    "desc": "Learn SQL, the core language for Big Data analysis, and enable insight-driven decision-making and strategy for your business.", 
-    "duration": "2", 
-    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/219UNjX4r925AbuYRhbFYa/cc41f3d6d2a53d23637335a7a81baa1b/syllabus__6_.jpg", 
+},
+    {
+    "id": "2",
+    "desc": "Learn SQL, the core language for Big Data analysis, and enable insight-driven decision-making and strategy for your business.",
+    "duration": "2",
+    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/219UNjX4r925AbuYRhbFYa/cc41f3d6d2a53d23637335a7a81baa1b/syllabus__6_.jpg",
     "name": "Learn SQL+"
-  }, 
-  {
-    "desc": "Gain foundational data skills applicable to marketing. Collect and analyze data, model marketing scenarios, and communicate your findings with Excel, Tableau, Google Analytics, and Data Studio.", 
-    "duration": "3", 
-    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/1rJDmku9XmR3FlxsyJ8JVc/a6442a0ef3d7200af03b9107e15f894c/MAND_Syllabus.jpg", 
+},
+    {
+    "id": "3",
+    "desc": "Gain foundational data skills applicable to marketing. Collect and analyze data, model marketing scenarios, and communicate your findings with Excel, Tableau, Google Analytics, and Data Studio.",
+    "duration": "3",
+    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/1rJDmku9XmR3FlxsyJ8JVc/a6442a0ef3d7200af03b9107e15f894c/MAND_Syllabus.jpg",
     "name": "Become a Marketing Analyst "
-  }, 
-  {
-    "desc": "Learn foundational machine learning techniques -- from data manipulation to unsupervised and supervised algorithms.", 
-    "duration": "3", 
-    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4BPXeRdaDDHpbKZOTJfG0a/4da8801f996950f2f2cb63b4561dbeaf/image-term1.jpg", 
+},
+    {
+    "id": "4",
+    "desc": "Learn foundational machine learning techniques -- from data manipulation to unsupervised and supervised algorithms.",
+    "duration": "3",
+    "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4BPXeRdaDDHpbKZOTJfG0a/4da8801f996950f2f2cb63b4561dbeaf/image-term1.jpg",
     "name": "Intro to Machine Learning with PyTorch"
-  }]
+}]
+
 
 @app.after_request
 def after_request(response):
@@ -41,12 +46,6 @@ def after_request(response):
 @app.route("/index")
 def index():
     return render_template('index.html', login=False)
-
-
-@app.route("/courses/")
-@app.route("/courses/<term>")
-def courses(term=2020):
-    return render_template("courses.html", courseData=courseData, courses=True)
 
 
 @app.route("/register")
@@ -91,8 +90,8 @@ def create_course():
     return render_template("enrollment.html", course_name=course_name)
 
 
-@app.route('/course/<int:index>')
-def course(index):
+@app.route('/course/<int:index>', methods=['GET'])
+def view_courses(index):
     result = db.session.query(Course).filter(Course.id == index)
     result = result[0]
 
@@ -107,31 +106,48 @@ def course(index):
     return render_template('course.html', course=json_data)
 
 
-@app.route("/update-course/<int:index>", methods=['POST'])
+@app.route("/course/<int:index>", methods=['POST'])
 def update_course(index):
 
-    # try:
+    try:
+        result = db.session.query(Course).filter(Course.id == index)
+        result = result[0]
+        course = result
 
-    result = db.session.query(Course).filter(Course.id == index)
-    result = result[0]
-    course = result
+        course.name = request.form.get('course-name')
+        course.description = request.form.get('course-description')
+        course.duration = request.form.get('course-duration')
+        course.image_link = request.form.get('course-img-URL')
 
-    course.name = request.form.get('course-name')
-    course.description = request.form.get('course-description')
-    course.duration = request.form.get('course-duration')
-    course.image_link = request.form.get('course-img-URL')
+        db.session.commit()
 
-    db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(e)
 
-    return redirect(url_for('course', index=index))
+    finally:
+        db.session.close()
+
+    return redirect(url_for('view_courses', index=index))
 
 
-# except Exception as e:
-#    db.session.rollback()
-#    print(e)
+@app.route("/course/<int:index>", methods=['DELETE'])
+def delete_course(index):
+    try:
+        result = db.session.query(Course).filter(Course.id == index)
+        result = result[0]
 
-# finally:
-#    db.session.close()
+        db.session.delete(result)
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+
+    finally:
+        db.session.close()
+
+    return render_template('catalog.html')
 
 
 @app.route("/enrollment", methods=["GET", "POST"])
@@ -150,7 +166,7 @@ def enrollment():
     '''
 
 
-@app.route('/view_catalog')
+@app.route('/catalog')
 def view_catalog():
 
     courses = Course.query.all()
@@ -165,12 +181,9 @@ def view_catalog():
             "image_link": course.image_link
         })
 
+    #data = data + dummy_course
+
     return render_template("catalog.html", courses=data)
-
-
-@app.route('/view_courses')
-def view_courses():
-    return render_template("courses.html")
 
 
 @app.route('/api/')
@@ -189,5 +202,5 @@ def api(index=None):
         })
 
     data = data + dummy_course
-    
+
     return jsonify(data)
