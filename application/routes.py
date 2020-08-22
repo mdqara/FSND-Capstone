@@ -96,6 +96,7 @@ def create_course():
 
 
 @app.route('/course/<int:index>', methods=['GET'])
+@requires_auth('get:course')
 def view_courses(index):
     result = db.session.query(Course).filter(Course.id == index)
     result = result[0]
@@ -112,6 +113,7 @@ def view_courses(index):
 
 
 @app.route("/course/<int:index>", methods=["PATCH"])
+@requires_auth('patch:course')
 def update_course(index):
 
     try:
@@ -144,6 +146,7 @@ def update_course(index):
 
 
 @app.route("/course/<int:index>", methods=['DELETE'])
+@requires_auth('delete:course')
 def delete_course(index):
     try:
         result = db.session.query(Course).filter(Course.id == index)
@@ -162,23 +165,8 @@ def delete_course(index):
     return redirect(url_for('view_catalog'))
 
 
-@app.route("/enrollment", methods=["GET", "POST"])
-def enrollment():
-
-    return render_template("enrollment.html")
-
-    '''
-    body = request.get_json()
-    data = body
-    id = request.form.get('courseID')
-    title = request.form.get('title')
-    term = request.form.get('term')
-
-    return render_template("enrollment.html", enrollment=False, data={"id": id, "title": title, "term": term})
-    '''
-
-
 @app.route('/catalog')
+@requires_auth('get:course')
 def view_catalog():
 
     courses = Course.query.all()
