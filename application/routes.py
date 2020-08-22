@@ -47,6 +47,7 @@ def after_request(response):
 @app.route("/")
 @app.route("/index")
 def index():
+
     return render_template('index.html', login=False)
 
 
@@ -57,20 +58,18 @@ def register():
 
 @app.route("/login")
 def login():
-    return redirect("https://" + AUTH0_DOMAIN
-                    + "/authorize?audience=" + API_AUDIENCE
-                    + "&scope=SCOPE&response_type=code&client_id=" + CLIENT_ID
-                    + "&redirect_uri=" + REDIRECT_URI, code=302)
+
+    return redirect("https://dev-ypnvxc34.us.auth0.com/authorize?audience=course&response_type=token&client_id=j11ADdqp4NY4wjujGfb6IPYupMZDHrbF&redirect_uri=http://127.0.0.1:5000/")
 
 
 @app.route("/add-course")
-@requires_auth('post:course')
+# @requires_auth('post:course')
 def add_course():
     return render_template('add-course.html')
 
 
 @app.route("/create-course", methods=['POST'])
-@requires_auth('post:course')
+# @requires_auth('post:course')
 def create_course():
 
     try:
@@ -97,7 +96,7 @@ def create_course():
 
 
 @app.route('/course/<int:index>', methods=['GET'])
-@requires_auth('get:course')
+# @requires_auth('get:course')
 def view_courses(index):
     result = db.session.query(Course).filter(Course.id == index)
     result = result[0]
@@ -114,7 +113,7 @@ def view_courses(index):
 
 
 @app.route("/course/<int:index>", methods=["PATCH"])
-@requires_auth('patch:course')
+# @requires_auth('patch:course')
 def update_course(index):
 
     try:
@@ -147,7 +146,7 @@ def update_course(index):
 
 
 @app.route("/course/<int:index>", methods=['DELETE'])
-@requires_auth('delete:course')
+# @requires_auth('delete:course')
 def delete_course(index):
     try:
         result = db.session.query(Course).filter(Course.id == index)
