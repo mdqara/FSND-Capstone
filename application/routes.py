@@ -64,6 +64,7 @@ def login():
 
 
 @app.route("/add-course")
+@requires_auth('post:course')
 def add_course():
     return render_template('add-course.html')
 
