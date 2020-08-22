@@ -2,6 +2,8 @@ from application import app, cors
 from flask import render_template, request, abort, jsonify, url_for, redirect
 from models import Course, Instructor
 from models import db
+from .auth.auth import AuthError, requires_auth, AUTH0_DOMAIN, API_AUDIENCE, REDIRECT_URI, CLIENT_ID
+
 
 dummy_course = [{
     "id": "1",
@@ -55,12 +57,10 @@ def register():
 
 @app.route("/login")
 def login():
-    return render_template('login.html', login=True)
-
-
-@app.route("/user")
-def user():
-    return render_template('user.html')
+    return redirect("https://" + AUTH0_DOMAIN
+                    + "/authorize?audience=" + API_AUDIENCE
+                    + "&scope=SCOPE&response_type=code&client_id=" + CLIENT_ID
+                    + "&redirect_uri=" + REDIRECT_URI, code=302)
 
 
 @app.route("/add-course")
@@ -69,25 +69,30 @@ def add_course():
 
 
 @app.route("/create-course", methods=['POST'])
+@requires_auth('post:course')
 def create_course():
 
-    # try:
-    course_name = request.form.get('course-name')
-    description = request.form.get('course-description')
-    duration = request.form.get('course-duration')
-    imgURL = request.form.get('course-img-URL')
+    try:
+        course_name = request.form.get('course-name')
+        description = request.form.get('course-description')
+        duration = request.form.get('course-duration')
+        imgURL = request.form.get('course-img-URL')
 
-    course_to_add = Course(
-        name=course_name,
-        description=description,
-        duration=duration,
-        image_link=imgURL,
-    )
+        course_to_add = Course(
+            name=course_name,
+            description=description,
+            duration=duration,
+            image_link=imgURL,
+        )
 
-    db.session.add(course_to_add)
-    db.session.commit()
+        db.session.add(course_to_add)
+        db.session.commit()
 
-    return render_template("enrollment.html", course_name=course_name)
+        return render_template("enrollment.html", course_name=course_name)
+
+    except Exception:
+        print(Exception)
+        abort(500)
 
 
 @app.route('/course/<int:index>', methods=['GET'])
@@ -211,3 +216,54 @@ def api(index=None):
     data = data + dummy_course
 
     return jsonify(data)
+
+    '''
+
+    error handling 
+    using @app.errorhandler
+
+    '''
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            "success": False,
+            "error": 400,
+            "message": "Bad Request, The server cannot or will not process the request due to an apparent client error."
+        }), 400
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "success": False,
+            "error": 404,
+            "message": "Not Found, The requested resource could not be found but may be available in the future."
+        }), 404
+
+    @app.errorhandler(422)
+    def unprocessable_entity(error):
+        return jsonify({
+            "success": False,
+            "error": 422,
+            "message": "Unprocessable Entity, The request was well-formed but was unable to be followed due to semantic errors."
+        }), 422
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return jsonify({
+            "success": False,
+            "error": 500,
+            "message": "Internal Server Error"
+        }), 500
+
+    @app.errorhandler(AuthError)
+    def handle_auth_error(exciption):
+        response = jsonify(exciption.error)
+        response.status_code = exciption.status_code
+        return response
+    print(__name__, flush=True)
+    if __name__ == '__main__':
+        if ENV == 'dev':
+            app.run(host='127.0.0.1', port=5000, debug=True)
+        else:
+            app.run(debug=False)

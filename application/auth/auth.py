@@ -7,7 +7,9 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'dev-ypnvxc34.us.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'PeoplesAcademy'
+API_AUDIENCE = 'course'
+CLIENT_ID = 'hskV5h21ISdC67G09mYdA0UcjhePVbcV'
+REDIRECT_URI = 'https://fsnd-capstone-project.herokuapp.com/'
 
 
 class AuthError(Exception):
