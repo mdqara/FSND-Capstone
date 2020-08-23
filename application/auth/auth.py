@@ -30,7 +30,9 @@ def get_token_auth_header():
     """
 
     #auth = request.headers.get('Authorization', None)
-    auth = 'bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlcxMXM2ZHRzNGxaXy1rWFlTZ1lrVyJ9.eyJpc3MiOiJodHRwczovL2Rldi15cG52eGMzNC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY0MTA2OGJiMjMwMzAwMDY3MDUyZWNhIiwiYXVkIjoiY291cnNlIiwiaWF0IjoxNTk4MTYxNzYxLCJleHAiOjE1OTgyNDgxNjEsImF6cCI6ImoxMUFEZHFwNE5ZNHdqdWpHZmI2SVBZdXBNWkRIcmJGIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6Y291cnNlIl19.ME75LwBSHnESWPJDFwraiV1QqDe2yc-SGp-8M9YcDF2S93EseZE69XusTnoBKk2GTUchakzHQDrTxM71qTvHcKhpwIqP2rWOoux-wHHjGGEwKK2Xs_FvYJlRtJEmGTsqwlmJrBXClg3AVdPHbRwT7nan6ftGrLue2hgW7TmK7IrXw5yeDIcjeE2c6EdwhTMzqOIi6P6HoPmsYDWA2saLyNDfK_HEo0ZejiYNf63wsBI_HKJTxG_OzTlX2N9TxzOya4oC-MqIvGTUCs_Pthnu110Y78hFBxMBIB6pWih0nCpMeJFfqQ6WlpW6JlEwag3y2aGO3F-lrYMvq-l2fo5TUQ'
+    auth = 'bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlcxMXM2ZHRzNGxaXy1rWFlTZ1lrVyJ9.eyJpc3MiOiJodHRwczovL2Rldi15cG52eGMzNC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWY0MjBkYzZhMWI0MWYwMDY3ODIxNzAxIiwiYXVkIjoiY291cnNlIiwiaWF0IjoxNTk4MTY4NDI3LCJleHAiOjE1OTgyNTQ4MjcsImF6cCI6ImoxMUFEZHFwNE5ZNHdqdWpHZmI2SVBZdXBNWkRIcmJGIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6Y291cnNlIiwiZGVsZXRlOmluc3RydWN0b3IiLCJnZXQ6Y291cnNlIiwicGF0Y2g6Y291cnNlIiwicG9zdDpjb3Vyc2UiLCJwb3N0Omluc3RydWN0b3IiXX0.OW_9AH25mUYLyR1oIZ1WQAizEIgs_DFQpOyxfJr_d77VxG6i6IdKptc4loWMewdYjfooiPS1-F9rg66G2shSzX7sRKybHQ7uetRAQpdOjpMyajCfwJJmOP47Dc8CRWiD2BEB7_lFyr9VXr9BTRMgdJZ4siGgBfhjgcZRg4LcbV8rjI81paHKj9rHEOGPxIkLevut2iBHEnuDquPbVEqdkj0bYIUKudJW0V6MaqrTcQ_6IvAsvE-cF-2CxH39UTD61txkTgPCwT6UZRJ9BMv_yeBJljFx1mdM49X4K6MLwiIUF-fB-M7Q1CHwNgMeQ6SpI8i_kDTLoH-nCmds0nNofQ'
+
+    print(auth)
 
     if not auth:
         raise AuthError({
@@ -39,6 +41,7 @@ def get_token_auth_header():
         }, 401)
 
     parts = auth.split()
+    print(len(parts))
 
     if parts[0].lower() != 'bearer':
         raise AuthError({

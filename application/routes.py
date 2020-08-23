@@ -60,7 +60,27 @@ def login():
 @app.route("/add-course")
 @requires_auth('post:course')
 def add_course(*args, **kwargs):
-    return render_template('add-course.html')
+
+    instructors = Instructor.query.all()
+
+    data = []
+
+    for instructor in instructors:
+        data.append({
+            "id": instructor.id,
+            "name": instructor.name,
+            "qualification": instructor.qualification
+        })
+
+    print(data)
+
+    return render_template('add-course.html', data=data)
+
+
+@app.route("/add-instrcutor")
+# @requires_auth('post:instructor')
+def add_instructor(*args, **kwargs):
+    return render_template('add-instructor.html')
 
 
 @app.route("/create-course", methods=['POST'])
@@ -83,7 +103,30 @@ def create_course(*args, **kwargs):
         db.session.add(course_to_add)
         db.session.commit()
 
-        return render_template("enrollment.html", course_name=course_name)
+        return render_template("enrollment.html", data=course_name)
+
+    except Exception:
+        print(Exception)
+        abort(500)
+
+
+@app.route("/create-instructor", methods=['POST'])
+# @requires_auth('post:instructor')
+def create_instructor(*args, **kwargs):
+
+    try:
+        instructor_name = request.form.get('instructor-name')
+        instructor_qualification = request.form.get('instructor-qualification')
+
+        instructor_to_add = Instructor(
+            name=instructor_name,
+            qualification=instructor_qualification
+        )
+
+        db.session.add(instructor_to_add)
+        db.session.commit()
+
+        return render_template("enrollment.html", data=instructor_name)
 
     except Exception:
         print(Exception)
@@ -158,6 +201,28 @@ def delete_course(payload, index):
         db.session.close()
 
     return redirect(url_for('view_catalog'))
+
+
+@app.route("/instructor/<int:index>", methods=['DELETE'])
+# @requires_auth('delete:instructor')
+def delete_instructor(index):
+    try:
+        result = db.session.query(Instructor).filter(Instructor.id == index)
+        result = result[0]
+
+        db.session.delete(result)
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+
+    finally:
+        db.session.close()
+
+    return jsonify({
+        'message': 'instrcutor has been deleted successfully'
+    })
 
 
 @app.route('/catalog')

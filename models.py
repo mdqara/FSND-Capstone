@@ -22,17 +22,6 @@ def setup(app):
 # ----------------------------------------------------------------------------#
 
 
-class Student(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    fname = db.Column(db.String(120))
-    lanme = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    email = db.Column(db.String(120))
-    enrollment = db.relationship(
-        "Enrollment", backref="student", cascade="all,delete", lazy=True)
-
-
 class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
@@ -47,10 +36,8 @@ class Course(db.Model):
 class Instructor(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    fname = db.Column(db.String)
-    lanme = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    email = db.Column(db.String(120))
+    name = db.Column(db.String)
+    qualification = db.Column(db.String)
     enrollment = db.relationship(
         "Enrollment", backref="teacher", cascade="all,delete", lazy=True)
 
@@ -59,8 +46,6 @@ class Enrollment(db.Model):
     __tablename__ = "Enrollment"
 
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey(
-        "student.id"), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey(
         "course.id"), nullable=False)
     instructor_id = db.Column(db.Integer, db.ForeignKey(
