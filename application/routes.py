@@ -92,12 +92,14 @@ def create_course(*args, **kwargs):
         description = request.form.get('course-description')
         duration = request.form.get('course-duration')
         imgURL = request.form.get('course-img-URL')
+        instructor = request.form.get('instructor')
 
         course_to_add = Course(
             name=course_name,
             description=description,
             duration=duration,
             image_link=imgURL,
+            instructor=instructor
         )
 
         db.session.add(course_to_add)
@@ -144,7 +146,8 @@ def view_courses(payload, index):
         'name': result.name,
         'desc': result.description,
         'duration': result.duration,
-        'image_link': result.image_link
+        'image_link': result.image_link,
+        'instructor': result.instructor
     }
 
     return render_template('course.html', course=json_data)
@@ -214,13 +217,16 @@ def delete_instructor(index):
         db.session.commit()
 
     except Exception as e:
-        db.session.rollback()
-        print(e)
+        return jsonify({
+            "success": False,
+            'message': 'Error, instrcutor has not been deleted'
+        })
 
     finally:
         db.session.close()
 
     return jsonify({
+        "success": True,
         'message': 'instrcutor has been deleted successfully'
     })
 
@@ -264,6 +270,29 @@ def api(index=None):
     data = data + dummy_course
 
     return jsonify(data)
+
+
+@app.route('/api/courses')
+@requires_auth('get:course')
+def get_courses_json(*args, **kwargs):
+
+    courses = Course.query.all()
+    data = []
+
+    for course in courses:
+        data.append({
+            "id": course.id,
+            "name": course.name,
+            "desc": course.description,
+            "duration": course.duration,
+            "image_link": course.image_link,
+            'instructor': course.instructor
+        })
+
+    return jsonify({
+        'success': True,
+        'courses': data
+    })
 
     '''
 

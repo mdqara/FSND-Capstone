@@ -8,13 +8,9 @@
             <h4 class="mt-5">Course Description</h4>
             <p class="lead text-justify">{{ course.desc }}</p>
 
-            {% if login %}
-            <p class="lead font-weight-bold">Discover the courses now.</p>
-            <a class="btn btn-lg btn-success" href="#" role="button">Enroll &raquo;</a>
+            <h5 class="mt-5">Course Instructor</h5>
+            <p class="lead text-justify">{{ course.instructor }}</p>
 
-            {% else %}
-            <a class="btn btn-lg btn-success" href="#" role="button">Login to enroll &raquo;</a>
-            {% endif %}
         </div>
 
         <div class="col-md-4 order-first order-md-2">

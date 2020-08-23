@@ -34,9 +34,9 @@
 
         <div class="form-group">
           <label for="instructor">Instructor of the course</label>
-          <select class="custom-select my-1 mr-sm-2" required>
+          <select name="instructor" class="custom-select my-1 mr-sm-2" required>
             {% for instructor in data %}
-            <option value="{{ instructor.id }}">{{ instructor.name }}</option>
+            <option value="{{ instructor.name }}">{{ instructor.name }}</option>
             {% endfor %}
           </select>
         </div>

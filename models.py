@@ -29,6 +29,7 @@ class Course(db.Model):
     description = db.Column(db.String(1000))
     duration = db.Column(db.String(120))
     image_link = db.Column(db.String(500))
+    instructor = db.Column(db.String(120))
     enrollment = db.relationship(
         "Enrollment", backref="subject", cascade="all,delete", lazy=True)
 
