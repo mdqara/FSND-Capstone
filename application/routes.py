@@ -51,11 +51,6 @@ def index():
     return render_template('index.html', login=False)
 
 
-@app.route("/register")
-def register():
-    return render_template('register.html', register=True)
-
-
 @app.route("/login")
 def login():
 
@@ -63,14 +58,14 @@ def login():
 
 
 @app.route("/add-course")
-# @requires_auth('post:course')
-def add_course():
+@requires_auth('post:course')
+def add_course(*args, **kwargs):
     return render_template('add-course.html')
 
 
 @app.route("/create-course", methods=['POST'])
-# @requires_auth('post:course')
-def create_course():
+@requires_auth('post:course')
+def create_course(*args, **kwargs):
 
     try:
         course_name = request.form.get('course-name')
@@ -96,8 +91,8 @@ def create_course():
 
 
 @app.route('/course/<int:index>', methods=['GET'])
-# @requires_auth('get:course')
-def view_courses(index):
+@requires_auth('get:course')
+def view_courses(payload, index):
     result = db.session.query(Course).filter(Course.id == index)
     result = result[0]
 
@@ -113,8 +108,8 @@ def view_courses(index):
 
 
 @app.route("/course/<int:index>", methods=["PATCH"])
-# @requires_auth('patch:course')
-def update_course(index):
+@requires_auth('patch:course')
+def update_course(payload, index):
 
     try:
         body = request.get_json()
@@ -146,8 +141,8 @@ def update_course(index):
 
 
 @app.route("/course/<int:index>", methods=['DELETE'])
-# @requires_auth('delete:course')
-def delete_course(index):
+@requires_auth('delete:course')
+def delete_course(payload, index):
     try:
         result = db.session.query(Course).filter(Course.id == index)
         result = result[0]
@@ -167,7 +162,7 @@ def delete_course(index):
 
 @app.route('/catalog')
 @requires_auth('get:course')
-def view_catalog():
+def view_catalog(*args, **kwargs):
 
     courses = Course.query.all()
     data = []
