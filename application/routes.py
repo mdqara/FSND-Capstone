@@ -3,6 +3,7 @@ from flask import render_template, request, abort, jsonify, url_for, redirect
 from models import Course, Instructor
 from models import db
 from .auth.auth import AuthError, requires_auth, AUTH0_DOMAIN, API_AUDIENCE, REDIRECT_URI, CLIENT_ID
+import requests
 
 
 dummy_course = [{
@@ -44,6 +45,11 @@ def after_request(response):
     return response
 
 
+'''
+<============= Front End =============>
+'''
+
+
 @app.route("/")
 @app.route("/index")
 def index():
@@ -55,84 +61,6 @@ def index():
 def login():
 
     return redirect("https://dev-ypnvxc34.us.auth0.com/authorize?audience=course&response_type=token&client_id=j11ADdqp4NY4wjujGfb6IPYupMZDHrbF&redirect_uri=http://127.0.0.1:5000/")
-
-
-@app.route("/add-course")
-@requires_auth('post:course')
-def add_course(*args, **kwargs):
-
-    instructors = Instructor.query.all()
-
-    data = []
-
-    for instructor in instructors:
-        data.append({
-            "id": instructor.id,
-            "name": instructor.name,
-            "qualification": instructor.qualification
-        })
-
-    print(data)
-
-    return render_template('add-course.html', data=data)
-
-
-@app.route("/add-instrcutor")
-# @requires_auth('post:instructor')
-def add_instructor(*args, **kwargs):
-    return render_template('add-instructor.html')
-
-
-@app.route("/create-course", methods=['POST'])
-@requires_auth('post:course')
-def create_course(*args, **kwargs):
-
-    try:
-        course_name = request.form.get('course-name')
-        description = request.form.get('course-description')
-        duration = request.form.get('course-duration')
-        imgURL = request.form.get('course-img-URL')
-        instructor = request.form.get('instructor')
-
-        course_to_add = Course(
-            name=course_name,
-            description=description,
-            duration=duration,
-            image_link=imgURL,
-            instructor=instructor
-        )
-
-        db.session.add(course_to_add)
-        db.session.commit()
-
-        return render_template("enrollment.html", data=course_name)
-
-    except Exception:
-        print(Exception)
-        abort(500)
-
-
-@app.route("/create-instructor", methods=['POST'])
-# @requires_auth('post:instructor')
-def create_instructor(*args, **kwargs):
-
-    try:
-        instructor_name = request.form.get('instructor-name')
-        instructor_qualification = request.form.get('instructor-qualification')
-
-        instructor_to_add = Instructor(
-            name=instructor_name,
-            qualification=instructor_qualification
-        )
-
-        db.session.add(instructor_to_add)
-        db.session.commit()
-
-        return render_template("enrollment.html", data=instructor_name)
-
-    except Exception:
-        print(Exception)
-        abort(500)
 
 
 @app.route('/course/<int:index>', methods=['GET'])
@@ -231,45 +159,19 @@ def delete_instructor(index):
     })
 
 
-@app.route('/catalog')
-@requires_auth('get:course')
-def view_catalog(*args, **kwargs):
+'''
 
-    courses = Course.query.all()
-    data = []
+<============= API EndPoints =============>
 
-    for course in courses:
-        data.append({
-            "id": course.id,
-            "name": course.name,
-            "desc": course.description,
-            "duration": course.duration,
-            "image_link": course.image_link
-        })
-
-    # data = data + dummy_course
-
-    return render_template("catalog.html", courses=data)
+'''
 
 
-@app.route('/api/')
-@app.route('/api/<index>')
-def api(index=None):
-
-    courses = Course.query.all()
-    data = []
-
-    for course in courses:
-        data.append({
-            "name": course.name,
-            "desc": course.description,
-            "duration": course.duration,
-            "image_link": course.image_link
-        })
-
-    data = data + dummy_course
-
-    return jsonify(data)
+'''
+    function for viewing all courses
+    
+    returns:
+        all JSON object of all courses
+'''
 
 
 @app.route('/api/courses')
@@ -293,6 +195,97 @@ def get_courses_json(*args, **kwargs):
         'success': True,
         'courses': data
     })
+
+
+@app.route('/courses')
+@requires_auth('get:course')
+def view_catalog(*args, **kwargs):
+
+    url = 'http://127.0.0.1:5000/api/courses'
+    data = requests.get(url)
+    data = data.json()
+
+    # data = data + dummy_course
+
+    return render_template("catalog.html", courses=data["courses"])
+
+
+@app.route("/add-course")
+@requires_auth('post:course')
+def add_course(*args, **kwargs):
+
+    instructors = Instructor.query.all()
+
+    data = []
+
+    for instructor in instructors:
+        data.append({
+            "id": instructor.id,
+            "name": instructor.name,
+            "qualification": instructor.qualification
+        })
+
+    print(data)
+
+    return render_template('add-course.html', data=data)
+
+
+@app.route("/create-course", methods=['POST'])
+@requires_auth('post:course')
+def create_course(*args, **kwargs):
+
+    try:
+        course_name = request.form.get('course-name')
+        description = request.form.get('course-description')
+        duration = request.form.get('course-duration')
+        imgURL = request.form.get('course-img-URL')
+        instructor = request.form.get('instructor')
+
+        course_to_add = Course(
+            name=course_name,
+            description=description,
+            duration=duration,
+            image_link=imgURL,
+            instructor=instructor
+        )
+
+        db.session.add(course_to_add)
+        db.session.commit()
+
+        return render_template("enrollment.html", data=course_name)
+
+    except Exception:
+        print(Exception)
+        abort(500)
+
+
+@app.route("/add-instrcutor")
+# @requires_auth('post:instructor')
+def add_instructor(*args, **kwargs):
+    return render_template('add-instructor.html')
+
+
+@app.route("/create-instructor", methods=['POST'])
+# @requires_auth('post:instructor')
+def create_instructor(*args, **kwargs):
+
+    try:
+        instructor_name = request.form.get('instructor-name')
+        instructor_qualification = request.form.get('instructor-qualification')
+
+        instructor_to_add = Instructor(
+            name=instructor_name,
+            qualification=instructor_qualification
+        )
+
+        db.session.add(instructor_to_add)
+        db.session.commit()
+
+        return render_template("enrollment.html", data=instructor_name)
+
+    except Exception:
+        print(Exception)
+        abort(500)
 
     '''
 

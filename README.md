@@ -79,3 +79,26 @@ flask run --reload
   }
   
   ```
+
+- #### GET '/api/instructors'
+
+  - Fetches all instructors.
+  - Returns list of instructors ordered by id.
+
+  ```
+  {
+    "courses": [
+      {
+        "desc": "Hone specialized skills in Data Product Management and learn how to model data, identify trends in data, and leverage those insights to develop data-backed product strategy.", 
+        "duration": "3", 
+        "id": 2, 
+        "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/1rJDmku9XmR3FlxsyJ8JVc/a6442a0ef3d7200af03b9107e15f894c/MAND_Syllabus.jpg", 
+        "instructor": "Mohammad Ali", 
+        "name": "Applying Data Science to Product Management"
+      }
+    ], 
+    "success": true
+  }
+  
+  ```
+
