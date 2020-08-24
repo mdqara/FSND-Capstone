@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e01d6666eeb5
+Revision ID: 3ef9cd708337
 Revises: 
-Create Date: 2020-08-23 09:42:59.050348
+Create Date: 2020-08-24 21:08:53.074259
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e01d6666eeb5'
+revision = '3ef9cd708337'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,14 +24,13 @@ def upgrade():
     sa.Column('description', sa.String(length=1000), nullable=True),
     sa.Column('duration', sa.String(length=120), nullable=True),
     sa.Column('image_link', sa.String(length=500), nullable=True),
+    sa.Column('instructor', sa.String(length=120), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('instructor',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('fname', sa.String(), nullable=True),
-    sa.Column('lanme', sa.String(length=120), nullable=True),
-    sa.Column('phone', sa.String(length=120), nullable=True),
-    sa.Column('email', sa.String(length=120), nullable=True),
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('qualification', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('Enrollment',

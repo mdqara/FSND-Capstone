@@ -2,6 +2,9 @@ from sqlalchemy.testing.config import db
 from sqlalchemy.dialects.mysql import JSON
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import os
+import config
+
 db = SQLAlchemy()
 
 # ----------------------------------------------------------------------------#
@@ -9,8 +12,9 @@ db = SQLAlchemy()
 # ----------------------------------------------------------------------------#
 
 
-def setup(app):
+def setup_db(app, database_path):
     app.config.from_object("config")
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)

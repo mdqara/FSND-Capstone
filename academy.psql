@@ -1,0 +1,313 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.3
+-- Dumped by pg_dump version 12.3
+
+-- Started on 2020-08-24 21:57:47
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 208 (class 1259 OID 25256)
+-- Name: Enrollment; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."Enrollment" (
+    id integer NOT NULL,
+    course_id integer NOT NULL,
+    instructor_id integer NOT NULL
+);
+
+
+ALTER TABLE public."Enrollment" OWNER TO postgres;
+
+--
+-- TOC entry 207 (class 1259 OID 25254)
+-- Name: Enrollment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public."Enrollment_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."Enrollment_id_seq" OWNER TO postgres;
+
+--
+-- TOC entry 2856 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: Enrollment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public."Enrollment_id_seq" OWNED BY public."Enrollment".id;
+
+
+--
+-- TOC entry 202 (class 1259 OID 25227)
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 25234)
+-- Name: course; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.course (
+    id integer NOT NULL,
+    name character varying(200),
+    description character varying(1000),
+    duration character varying(120),
+    image_link character varying(500),
+    instructor character varying(120)
+);
+
+
+ALTER TABLE public.course OWNER TO postgres;
+
+--
+-- TOC entry 203 (class 1259 OID 25232)
+-- Name: course_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.course_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.course_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2857 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: course_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.course_id_seq OWNED BY public.course.id;
+
+
+--
+-- TOC entry 206 (class 1259 OID 25245)
+-- Name: instructor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.instructor (
+    id integer NOT NULL,
+    name character varying,
+    qualification character varying
+);
+
+
+ALTER TABLE public.instructor OWNER TO postgres;
+
+--
+-- TOC entry 205 (class 1259 OID 25243)
+-- Name: instructor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.instructor_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.instructor_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2858 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: instructor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.instructor_id_seq OWNED BY public.instructor.id;
+
+
+--
+-- TOC entry 2707 (class 2604 OID 25259)
+-- Name: Enrollment id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Enrollment" ALTER COLUMN id SET DEFAULT nextval('public."Enrollment_id_seq"'::regclass);
+
+
+--
+-- TOC entry 2705 (class 2604 OID 25237)
+-- Name: course id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.course ALTER COLUMN id SET DEFAULT nextval('public.course_id_seq'::regclass);
+
+
+--
+-- TOC entry 2706 (class 2604 OID 25248)
+-- Name: instructor id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.instructor ALTER COLUMN id SET DEFAULT nextval('public.instructor_id_seq'::regclass);
+
+
+--
+-- TOC entry 2850 (class 0 OID 25256)
+-- Dependencies: 208
+-- Data for Name: Enrollment; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."Enrollment" (id, course_id, instructor_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2844 (class 0 OID 25227)
+-- Dependencies: 202
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+3ef9cd708337
+\.
+
+
+--
+-- TOC entry 2846 (class 0 OID 25234)
+-- Dependencies: 204
+-- Data for Name: course; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.course (id, name, description, duration, image_link, instructor) FROM stdin;
+2	Applying Data Science to Product Management	Hone specialized skills in Data Product Management and learn how to model data, identify trends in data, and leverage those insights to develop data-backed product strategy.	1	https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4FCXQsUpzftEgEdFGqQmXE/8ba5c2e69a5b036d4dafe1ae5803fe60/syllabus__8_.jpg	Mohammad Ali
+3	Learn SQL+	Learn SQL, the core language for Big Data analysis, and enable insight-driven decision-making and strategy for your business.	2	https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/219UNjX4r925AbuYRhbFYa/cc41f3d6d2a53d23637335a7a81baa1b/syllabus__6_.jpg	Mohammad Ali
+4	Become a Marketing Analyst	Gain foundational data skills applicable to marketing. Collect and analyze data, model marketing scenarios, and communicate your findings with Excel, Tableau, Google Analytics, and Data Studio.	3	https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/1rJDmku9XmR3FlxsyJ8JVc/a6442a0ef3d7200af03b9107e15f894c/MAND_Syllabus.jpg	Mohammad Ali
+5	Intro to Machine Learning with PyTorch	Learn foundational machine learning techniques -- from data manipulation to unsupervised and supervised algorithms.	3	https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4BPXeRdaDDHpbKZOTJfG0a/4da8801f996950f2f2cb63b4561dbeaf/image-term1.jpg	Mohammad Ali
+\.
+
+
+--
+-- TOC entry 2848 (class 0 OID 25245)
+-- Dependencies: 206
+-- Data for Name: instructor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.instructor (id, name, qualification) FROM stdin;
+1	Mohammad Qara	
+\.
+
+
+--
+-- TOC entry 2859 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: Enrollment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public."Enrollment_id_seq"', 1, false);
+
+
+--
+-- TOC entry 2860 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: course_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.course_id_seq', 5, true);
+
+
+--
+-- TOC entry 2861 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: instructor_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.instructor_id_seq', 1, true);
+
+
+--
+-- TOC entry 2715 (class 2606 OID 25261)
+-- Name: Enrollment Enrollment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Enrollment"
+    ADD CONSTRAINT "Enrollment_pkey" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2709 (class 2606 OID 25231)
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- TOC entry 2711 (class 2606 OID 25242)
+-- Name: course course_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.course
+    ADD CONSTRAINT course_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2713 (class 2606 OID 25253)
+-- Name: instructor instructor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.instructor
+    ADD CONSTRAINT instructor_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2716 (class 2606 OID 25262)
+-- Name: Enrollment Enrollment_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Enrollment"
+    ADD CONSTRAINT "Enrollment_course_id_fkey" FOREIGN KEY (course_id) REFERENCES public.course(id);
+
+
+--
+-- TOC entry 2717 (class 2606 OID 25267)
+-- Name: Enrollment Enrollment_instructor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."Enrollment"
+    ADD CONSTRAINT "Enrollment_instructor_id_fkey" FOREIGN KEY (instructor_id) REFERENCES public.instructor(id);
+
+
+-- Completed on 2020-08-24 21:57:48
+
+--
+-- PostgreSQL database dump complete
+--
+

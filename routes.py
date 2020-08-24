@@ -631,8 +631,3 @@ def delete_instructor_json(index):
         response.status_code = exciption.status_code
         return response
     print(__name__, flush=True)
-    if __name__ == '__main__':
-        if ENV == 'dev':
-            app.run(host='127.0.0.1', port=5000, debug=True)
-        else:
-            app.run(debug=False)

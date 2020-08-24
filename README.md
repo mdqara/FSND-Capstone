@@ -4,11 +4,15 @@
 
 This is an application of full stack web development for the capstone project in Udacity FSND, the stack includes: flask, SQLAlchemy, Auth0, Bootstrap. Basically it is a web application that let instructors to add themselves and others and create course that students can view.
 
-## Live App:
+## Live App
 
 You can check the live app that deployed in Heroku on the like: https://fsnd-capstone-project.herokuapp.com/	
 
 
+
+## Table of content
+
+[TOC]
 
 ## Getting Started
 
@@ -368,4 +372,17 @@ web: gunicorn wsgi:app
 ```
 
 - Push any changes to your GitHub Repository then it will deployed on Heroku.
+
+
+
+## Testing
+
+Make sure to create database called `academy_test` and restore a copy from pre-created database with pre-defined information, using the following commands:
+
+```
+dropdb academy_test
+createdb academy_test
+psql academy_test < academy.psql
+python test_app.py
+```
 
