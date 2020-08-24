@@ -63,22 +63,94 @@ def login():
     return redirect("https://dev-ypnvxc34.us.auth0.com/authorize?audience=course&response_type=token&client_id=j11ADdqp4NY4wjujGfb6IPYupMZDHrbF&redirect_uri=http://127.0.0.1:5000/")
 
 
+'''
+    function for viewing all courses in front end
+    
+    returns:
+        A web page that contains all courses 
+'''
+
+
+@app.route('/courses')
+@requires_auth('get:course')
+def view_catalog(*args, **kwargs):
+
+    url = 'http://127.0.0.1:5000/api/courses'
+    data = requests.get(url)
+    data = data.json()
+
+    # data = data + dummy_course
+
+    return render_template("catalog.html", courses=data["courses"])
+
+
+'''
+    function for showing the add course page in the front end, and it request the name of instructors from the database and send it to the front end.
+    
+    returns:
+        A web page that contains all courses 
+'''
+
+
+@app.route("/add-course")
+@requires_auth('post:course')
+def add_course(*args, **kwargs):
+
+    instructors = Instructor.query.all()
+
+    data = []
+
+    for instructor in instructors:
+        data.append({
+            "id": instructor.id,
+            "name": instructor.name,
+            "qualification": instructor.qualification
+        })
+
+    # print(data)
+
+    return render_template('add-course.html', data=data)
+
+
+'''
+    function adding an instructor in the frontend.
+    
+    returns:
+        A web page that views add instructor form.
+'''
+
+
+@app.route("/add-instrcutor")
+# @requires_auth('post:instructor')
+def add_instructor(*args, **kwargs):
+    return render_template('add-instructor.html')
+
+
+'''
+    function for getting a specific course based on its index from the api endpoint.
+    
+    returns:
+        A web page that contains the specific course index.
+'''
+
+
 @app.route('/course/<int:index>', methods=['GET'])
 @requires_auth('get:course')
 def view_courses(payload, index):
-    result = db.session.query(Course).filter(Course.id == index)
-    result = result[0]
 
-    json_data = {
-        'id': result.id,
-        'name': result.name,
-        'desc': result.description,
-        'duration': result.duration,
-        'image_link': result.image_link,
-        'instructor': result.instructor
-    }
+    url = 'http://127.0.0.1:5000/api/course/' + str(index)
+    data = requests.get(url)
+    data = data.json()
 
-    return render_template('course.html', course=json_data)
+    return render_template('course.html', course=data["course"])
+
+
+'''
+    function for updating a specific course based on its index.
+    
+    returns:
+        A web page that contains the edit information of the that specific course index.
+'''
 
 
 @app.route("/course/<int:index>", methods=["PATCH"])
@@ -114,6 +186,14 @@ def update_course(payload, index):
     return redirect(url_for('view_courses', index=index))
 
 
+'''
+    function for deleting a specific course based on its index.
+    
+    returns:
+        it will returns to the catalog.html page.
+'''
+
+
 @app.route("/course/<int:index>", methods=['DELETE'])
 @requires_auth('delete:course')
 def delete_course(payload, index):
@@ -132,31 +212,6 @@ def delete_course(payload, index):
         db.session.close()
 
     return redirect(url_for('view_catalog'))
-
-
-@app.route("/instructor/<int:index>", methods=['DELETE'])
-# @requires_auth('delete:instructor')
-def delete_instructor(index):
-    try:
-        result = db.session.query(Instructor).filter(Instructor.id == index)
-        result = result[0]
-
-        db.session.delete(result)
-        db.session.commit()
-
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            'message': 'Error, instrcutor has not been deleted'
-        })
-
-    finally:
-        db.session.close()
-
-    return jsonify({
-        "success": True,
-        'message': 'instrcutor has been deleted successfully'
-    })
 
 
 '''
@@ -197,37 +252,41 @@ def get_courses_json(*args, **kwargs):
     })
 
 
-@app.route('/courses')
+'''
+    function for getting a specific course based on its index.
+    
+    returns:
+        A JSON object that contains the course information.
+'''
+
+
+@app.route('/api/course/<int:index>', methods=['GET'])
 @requires_auth('get:course')
-def view_catalog(*args, **kwargs):
+def get_courses_index_json(payload, index):
+    result = db.session.query(Course).filter(Course.id == index)
+    result = result[0]
 
-    url = 'http://127.0.0.1:5000/api/courses'
-    data = requests.get(url)
-    data = data.json()
+    data = {
+        'id': result.id,
+        'name': result.name,
+        'desc': result.description,
+        'duration': result.duration,
+        'image_link': result.image_link,
+        'instructor': result.instructor
+    }
 
-    # data = data + dummy_course
+    return jsonify({
+        'message': True,
+        'course': data
+    })
 
-    return render_template("catalog.html", courses=data["courses"])
 
-
-@app.route("/add-course")
-@requires_auth('post:course')
-def add_course(*args, **kwargs):
-
-    instructors = Instructor.query.all()
-
-    data = []
-
-    for instructor in instructors:
-        data.append({
-            "id": instructor.id,
-            "name": instructor.name,
-            "qualification": instructor.qualification
-        })
-
-    print(data)
-
-    return render_template('add-course.html', data=data)
+'''
+    function posting a course to the app.
+    
+    returns:
+        A confirmation message in a wep page that the course has been added
+'''
 
 
 @app.route("/create-course", methods=['POST'])
@@ -252,17 +311,19 @@ def create_course(*args, **kwargs):
         db.session.add(course_to_add)
         db.session.commit()
 
-        return render_template("enrollment.html", data=course_name)
-
     except Exception:
         print(Exception)
         abort(500)
 
+    return render_template("catalog.html", data=course_name)
 
-@app.route("/add-instrcutor")
-# @requires_auth('post:instructor')
-def add_instructor(*args, **kwargs):
-    return render_template('add-instructor.html')
+
+'''
+    function posting an instuctor to the app.
+    
+    returns:
+        A web page of a confirmation message in a wep page that the instuctor has been added
+'''
 
 
 @app.route("/create-instructor", methods=['POST'])
@@ -281,11 +342,82 @@ def create_instructor(*args, **kwargs):
         db.session.add(instructor_to_add)
         db.session.commit()
 
-        return render_template("enrollment.html", data=instructor_name)
-
     except Exception:
         print(Exception)
         abort(500)
+
+    return render_template("catalog.html", data=instructor_name)
+
+
+'''
+    function for deleting a specific instructor based on its index.
+    
+    returns:
+        it will returns JSON object that contains the name of the deleted instructor.
+'''
+
+
+@app.route("/api/instructor/<int:index>", methods=["PATCH"])
+def update_instructor_json(index):
+
+    try:
+        body = request.get_json()
+
+        name = body.get('instructor-name', None)
+        qualification = body.get('instructor-qualification', None)
+
+        result = db.session.query(Instructor).filter(Instructor.id == index)
+        result = result[0]
+        instructor = result
+
+        instructor.name = name
+        instructor.qualification = qualification
+
+        db.session.commit()
+
+        return jsonify({
+            'message': True,
+            'instructor_id': index,
+            'instructor_name': name,
+            'instructor_qualification': qualification
+        })
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            'message': False,
+            'error': e
+        })
+
+    finally:
+        db.session.close()
+
+
+@app.route("/instructor/<int:index>", methods=['DELETE'])
+# @requires_auth('delete:instructor')
+def delete_instructor(index):
+    try:
+        result = db.session.query(Instructor).filter(Instructor.id == index)
+        result = result[0]
+        name = result.name
+
+        db.session.delete(result)
+        db.session.commit()
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            'message': 'Error, instrcutor has not been deleted'
+        })
+
+    finally:
+        db.session.close()
+
+    return jsonify({
+        "success": True,
+        'message': 'instrcutor has been deleted successfully',
+        'instuctor': name
+    })
 
     '''
 
