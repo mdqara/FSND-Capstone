@@ -7,32 +7,32 @@ import requests
 
 
 dummy_course = [{
-    "id": "1",
     "desc": "Hone specialized skills in Data Product Management and learn how to model data, identify trends in data, and leverage those insights to develop data-backed product strategy.",
     "duration": "1",
     "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4FCXQsUpzftEgEdFGqQmXE/8ba5c2e69a5b036d4dafe1ae5803fe60/syllabus__8_.jpg",
-    "name": "Applying Data Science to Product Management"
+    "name": "Applying Data Science to Product Management",
+    "instructor": "Mohammad Ali"
 },
     {
-    "id": "2",
     "desc": "Learn SQL, the core language for Big Data analysis, and enable insight-driven decision-making and strategy for your business.",
     "duration": "2",
     "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/219UNjX4r925AbuYRhbFYa/cc41f3d6d2a53d23637335a7a81baa1b/syllabus__6_.jpg",
-    "name": "Learn SQL+"
+    "name": "Learn SQL+",
+    "instructor": "Mohammad Ali"
 },
     {
-    "id": "3",
     "desc": "Gain foundational data skills applicable to marketing. Collect and analyze data, model marketing scenarios, and communicate your findings with Excel, Tableau, Google Analytics, and Data Studio.",
     "duration": "3",
     "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/1rJDmku9XmR3FlxsyJ8JVc/a6442a0ef3d7200af03b9107e15f894c/MAND_Syllabus.jpg",
-    "name": "Become a Marketing Analyst "
+    "name": "Become a Marketing Analyst",
+    "instructor": "Mohammad Ali"
 },
     {
-    "id": "4",
     "desc": "Learn foundational machine learning techniques -- from data manipulation to unsupervised and supervised algorithms.",
     "duration": "3",
     "image_link": "https://www.udacity.com/www-proxy/contentful/assets/2y9b3o528xhq/4BPXeRdaDDHpbKZOTJfG0a/4da8801f996950f2f2cb63b4561dbeaf/image-term1.jpg",
-    "name": "Intro to Machine Learning with PyTorch"
+    "name": "Intro to Machine Learning with PyTorch",
+    "instructor": "Mohammad Ali"
 }]
 
 
@@ -65,14 +65,14 @@ def login():
 
 '''
     function for viewing all courses in front end
-    
+
     returns:
-        A web page that contains all courses 
+        A web page that contains all courses
 '''
 
 
-@app.route('/courses')
-@requires_auth('get:course')
+@app.route('/catalog')
+# @requires_auth('get:course')
 def view_catalog(*args, **kwargs):
 
     url = 'http://127.0.0.1:5000/api/courses'
@@ -86,9 +86,9 @@ def view_catalog(*args, **kwargs):
 
 '''
     function for showing the add course page in the front end, and it request the name of instructors from the database and send it to the front end.
-    
+
     returns:
-        A web page that contains all courses 
+        A web page that contains all courses
 '''
 
 
@@ -113,8 +113,45 @@ def add_course(*args, **kwargs):
 
 
 '''
+    function posting a course to the app.
+
+    returns:
+        A confirmation message in a wep page that the course has been added
+'''
+
+
+@app.route("/create-course", methods=['POST'])
+@requires_auth('post:course')
+def create_course(*args, **kwargs):
+
+    try:
+        course_name = request.form.get('course-name')
+        description = request.form.get('course-description')
+        duration = request.form.get('course-duration')
+        imgURL = request.form.get('course-img-URL')
+        instructor = request.form.get('instructor')
+
+        course_to_add = Course(
+            name=course_name,
+            description=description,
+            duration=duration,
+            image_link=imgURL,
+            instructor=instructor
+        )
+
+        db.session.add(course_to_add)
+        db.session.commit()
+
+    except Exception:
+        print(Exception)
+        abort(500)
+
+    return render_template("catalog.html", data=course_name)
+
+
+'''
     function adding an instructor in the frontend.
-    
+
     returns:
         A web page that views add instructor form.
 '''
@@ -126,9 +163,32 @@ def add_instructor(*args, **kwargs):
     return render_template('add-instructor.html')
 
 
+@app.route("/create-instructor", methods=['POST'])
+@requires_auth('post:instructor')
+def create_instructor(*args, **kwargs):
+
+    try:
+        instructor_name = request.form.get('instructor-name')
+        instructor_qualification = request.form.get('instructor-qualification')
+
+        instructor_to_add = Instructor(
+            name=instructor_name,
+            qualification=instructor_qualification
+        )
+
+        db.session.add(instructor_to_add)
+        db.session.commit()
+
+    except Exception:
+        print(Exception)
+        abort(500)
+
+    return render_template("catalog.html", data=instructor_name)
+
+
 '''
     function for getting a specific course based on its index from the api endpoint.
-    
+
     returns:
         A web page that contains the specific course index.
 '''
@@ -147,7 +207,7 @@ def view_courses(payload, index):
 
 '''
     function for updating a specific course based on its index.
-    
+
     returns:
         A web page that contains the edit information of the that specific course index.
 '''
@@ -188,7 +248,7 @@ def update_course(payload, index):
 
 '''
     function for deleting a specific course based on its index.
-    
+
     returns:
         it will returns to the catalog.html page.
 '''
@@ -223,7 +283,7 @@ def delete_course(payload, index):
 
 '''
     function for viewing all courses
-    
+
     returns:
         all JSON object of all courses
 '''
@@ -254,7 +314,7 @@ def get_courses_json(*args, **kwargs):
 
 '''
     function for getting a specific course based on its index.
-    
+
     returns:
         A JSON object that contains the course information.
 '''
@@ -262,7 +322,7 @@ def get_courses_json(*args, **kwargs):
 
 @app.route('/api/course/<int:index>', methods=['GET'])
 @requires_auth('get:course')
-def get_courses_index_json(payload, index):
+def get_course_index_json(payload, index):
     result = db.session.query(Course).filter(Course.id == index)
     result = result[0]
 
@@ -282,23 +342,71 @@ def get_courses_index_json(payload, index):
 
 
 '''
-    function posting a course to the app.
+    function posting an instuctor to the app.
     
     returns:
-        A confirmation message in a wep page that the course has been added
+        A web page of a confirmation message in a wep page that the instuctor has been added
 '''
 
 
-@app.route("/create-course", methods=['POST'])
-@requires_auth('post:course')
-def create_course(*args, **kwargs):
+@app.route('/api/instructor', methods=['GET'])
+def get_instuctor_json(*args, **kwargs):
 
+    instructors = Instructor.query.all()
+    data = []
+
+    for instructor in instructors:
+        data.append({
+            "id": instructor.id,
+            "name": instructor.name,
+            "qualification": instructor.qualification
+        })
+
+    return jsonify({
+        'success': True,
+        'courses': data
+    })
+
+
+@app.route('/api/instructor/<int:index>', methods=['GET'])
+def get_instuctor_index_json(index):
+
+    result = db.session.query(Instructor).filter(Instructor.id == index)
+    result = result[0]
+
+    data = []
+
+    data = {
+        'id': result.id,
+        'name': result.name,
+        'qualification': result.qualification
+    }
+
+    return jsonify({
+        'success': True,
+        'courses': data
+    })
+
+
+'''
+    function posting a course to the app.
+
+    returns:
+        JSON object confirmation.
+'''
+
+
+@app.route("/api/course", methods=['POST'])
+@requires_auth('post:course')
+def create_course_json(*args, **kwargs):
     try:
-        course_name = request.form.get('course-name')
-        description = request.form.get('course-description')
-        duration = request.form.get('course-duration')
-        imgURL = request.form.get('course-img-URL')
-        instructor = request.form.get('instructor')
+
+        data = request.get_json()
+        course_name = data['name']
+        description = data['desc']
+        duration = data['duration']
+        imgURL = data['image_link']
+        instructor = data['instructor']
 
         course_to_add = Course(
             name=course_name,
@@ -315,24 +423,21 @@ def create_course(*args, **kwargs):
         print(Exception)
         abort(500)
 
-    return render_template("catalog.html", data=course_name)
+    return jsonify({
+        'message': True,
+        'course_name': course_name
+    })
 
 
-'''
-    function posting an instuctor to the app.
-    
-    returns:
-        A web page of a confirmation message in a wep page that the instuctor has been added
-'''
-
-
-@app.route("/create-instructor", methods=['POST'])
-# @requires_auth('post:instructor')
-def create_instructor(*args, **kwargs):
-
+@app.route("/api/instructor", methods=['POST'])
+@requires_auth('post:instructor')
+def create_instructor_json(*args, **kwargs):
     try:
-        instructor_name = request.form.get('instructor-name')
-        instructor_qualification = request.form.get('instructor-qualification')
+
+        data = request.get_json()
+
+        instructor_name = data['name']
+        instructor_qualification = data['qualification']
 
         instructor_to_add = Instructor(
             name=instructor_name,
@@ -346,25 +451,62 @@ def create_instructor(*args, **kwargs):
         print(Exception)
         abort(500)
 
-    return render_template("catalog.html", data=instructor_name)
+    return jsonify({
+        'message': True,
+        'name': instructor_name
+    })
 
 
-'''
-    function for deleting a specific instructor based on its index.
-    
-    returns:
-        it will returns JSON object that contains the name of the deleted instructor.
-'''
+@app.route("/api/course/<int:index>", methods=["PATCH"])
+def update_course_json(index):
+
+    try:
+        data = request.get_json()
+
+        name = data['name']
+        description = data['desc']
+        duration = data['duration']
+        image_link = data['image_link']
+        instructor = data['instructor']
+
+        result = db.session.query(Course).filter(Course.id == index)
+        result = result[0]
+        course = result
+
+        course.name = name
+        course.description = description
+        course.duration = duration
+        course.image_link = image_link
+        course.instructor = instructor
+
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+
+    finally:
+        db.session.close()
+
+    return jsonify({
+        'message': True,
+        'course_id': index,
+        'name': name,
+        'description': description,
+        'duration': duration,
+        'image_link': image_link,
+        'instructor': instructor
+    })
 
 
 @app.route("/api/instructor/<int:index>", methods=["PATCH"])
 def update_instructor_json(index):
 
     try:
-        body = request.get_json()
 
-        name = body.get('instructor-name', None)
-        qualification = body.get('instructor-qualification', None)
+        data = request.get_json()
+        name = data['name']
+        qualification = data['qualification']
 
         result = db.session.query(Instructor).filter(Instructor.id == index)
         result = result[0]
@@ -375,27 +517,52 @@ def update_instructor_json(index):
 
         db.session.commit()
 
-        return jsonify({
-            'message': True,
-            'instructor_id': index,
-            'instructor_name': name,
-            'instructor_qualification': qualification
-        })
+    except Exception:
+        print(Exception)
+        abort(500)
+
+    return jsonify({
+        'message': True,
+        'instructor_id': index,
+        'instructor_name': name,
+        'instructor_qualification': qualification
+    })
+
+
+@app.route("/api/course/<int:index>", methods=['DELETE'])
+# @requires_auth('delete:instructor')
+def delete_course_json(index):
+    try:
+        result = db.session.query(Course).filter(Course.id == index)
+        result = result[0]
+
+        db.session.delete(result)
+        db.session.commit()
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({
-            'message': False,
-            'error': e
-        })
+        print(e)
 
     finally:
         db.session.close()
 
+    return jsonify({
+        "success": True,
+        'message': 'course has been deleted'
+    })
 
-@app.route("/instructor/<int:index>", methods=['DELETE'])
+
+'''
+    function for deleting a specific instructor based on its index.
+    
+    returns:
+        it will returns JSON object that contains the name of the deleted instructor.
+'''
+
+
+@app.route("/api/instructor/<int:index>", methods=['DELETE'])
 # @requires_auth('delete:instructor')
-def delete_instructor(index):
+def delete_instructor_json(index):
     try:
         result = db.session.query(Instructor).filter(Instructor.id == index)
         result = result[0]
