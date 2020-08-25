@@ -10,7 +10,7 @@ import requests
 def create_app(test_config=None):
 
     # create and configure the app
-    app = Flask(__name__, template_folder='application/')
+    app = Flask(__name__, template_folder='application/templates')
     cors = CORS(app)
     CORS(app)
     database_path = os.environ.get('DATABASE_URL')
@@ -61,7 +61,7 @@ def create_app(test_config=None):
     @app.route("/index")
     def index():
 
-        return render_template('application/index.html', login=False)
+        return render_template('index.html', login=False)
 
     @app.route("/login")
     def login():
