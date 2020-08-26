@@ -309,8 +309,8 @@ flask run --reload
 
 ## Authentication
 
-- This app can be run at: https://fsnd-capstone-project.herokuapp.com/
-- To sign up or login: https://fsnd-capstone-project.herokuapp.com/login
+- This app can be run at: https://fsnd-capstone-2020.herokuapp.com/
+- To sign up or login: https://fsnd-capstone-2020.herokuapp.com/login
 
 - there are two users:
   1. **Student: who has the following:**

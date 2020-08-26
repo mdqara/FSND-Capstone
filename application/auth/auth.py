@@ -29,8 +29,7 @@ def get_token_auth_header():
     """Obtains the Access Token from the Authorization Header
     """
 
-    #auth = request.headers.get('Authorization', None)
-    auth = os.environ.get('INSTRUCTOR_TOKEN')
+    auth = request.headers.get('Authorization', None)
 
     # print(auth)
 
