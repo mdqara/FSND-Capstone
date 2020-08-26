@@ -61,7 +61,7 @@ def create_app(test_config=None):
     def login():
 
         return redirect(
-            "https://dev-ypnvxc34.us.auth0.com/authorize?audience=course&response_type=token&client_id=j11ADdqp4NY4wjujGfb6IPYupMZDHrbF&redirect_uri=http://127.0.0.1:5000/")
+            "https://dev-ypnvxc34.us.auth0.com/authorize?audience=course&response_type=token&client_id=j11ADdqp4NY4wjujGfb6IPYupMZDHrbF&redirect_uri=https://fsnd-capstone-2020.herokuapp.com/")
 
 
     '''
