@@ -3,7 +3,6 @@ from sqlalchemy.dialects.mysql import JSON
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
-import config
 
 db = SQLAlchemy()
 

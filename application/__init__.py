@@ -1,3 +1,4 @@
+
 from application import routes
 from flask import Flask
 from models import setup_db
