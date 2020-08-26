@@ -6,7 +6,7 @@ This is an application of full stack web development for the capstone project in
 
 ## Live App
 
-You can check the live app that deployed in Heroku on the like: https://fsnd-capstone-project.herokuapp.com/	
+You can check the live app that deployed in Heroku on the like: https://fsnd-capstone-2020.herokuapp.com/	
 
 
 
